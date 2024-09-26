@@ -1,13 +1,29 @@
 import React, { useState } from "react"
+import axios from "axios"
+import { BACKEND_URL } from "../../config"
+import { useNavigate } from "react-router-dom"
 
 export default function Signin() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
+  const navigate = useNavigate()
   const handleSubmit = (event) => {
     event.preventDefault()
-    // Add login logic here
-    console.log("Login attempt with:", { email, password })
+    axios
+      .post(`${BACKEND_URL}/auth/signin`, {
+        email: email,
+        password: password,
+      })
+      .then((response) => {
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token)
+          navigate("/")
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   return (

@@ -1,9 +1,26 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-
+import { BACKEND_URL } from "../../config"
+import axios from "axios"
 export default function ProfilePage() {
   const navigate = useNavigate()
-
+  const [token, setToken] = useState("")
+  useEffect(() => {
+    setToken(localStorage.getItem(token))
+    axios
+      .post(`${BACKEND_URL}/auth/me`, null, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem(token),
+        },
+      })
+      .then((response) => {
+        if (response.data.verified === true) {
+          navigate("/")
+        } else {
+          navigate("/signin")
+        }
+      })
+  }, [])
   // This would typically come from your app's state management (e.g., Redux)
   const user = {
     name: "John Doe",
