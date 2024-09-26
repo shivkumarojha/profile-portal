@@ -4,6 +4,7 @@ import { z } from "zod"
 const router = express.Router()
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import authMiddleware from "../middleware/authMiddleware.js"
 
 // user zod schema for validation
 const userSchema = z.object({
@@ -11,6 +12,20 @@ const userSchema = z.object({
   email: z.string().email(),
   password: z.string(),
   userType: z.enum(["student", "admin"]),
+})
+
+// me route to check if the user is authorized
+router.post("/me", authMiddleware, (req, res) => {
+  if (req.userId) {
+    return res.status(200).json({
+      message: "Authorized",
+      verified: true,
+    })
+  }
+  return res.status(401).json({
+    message: "Not authorized",
+    verified: false,
+  })
 })
 
 // Signin Route
