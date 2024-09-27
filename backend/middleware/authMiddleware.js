@@ -11,15 +11,17 @@ async function authMiddleware(req, res, next) {
 
   const token = authHeader.split(" ")[1]
   console.log(token)
+
   try {
-    console.log(process.env.JWT_SECRET)
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    console.log("Before verification")
+    const decoded = await jwt.verify(token, process.env.JWT_SECRET)
+    console.log("after verification")
     console.log(decoded)
     req.userId = decoded.user
 
     next()
   } catch (err) {
-    return res.status(411).json({
+    return res.status(401).json({
       message: "You are not authorized.....",
     })
   }

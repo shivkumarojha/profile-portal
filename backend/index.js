@@ -14,14 +14,15 @@ const app = express()
 // for cors
 app.use(cors())
 // for extracting body
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
+// For form url encoded data
 // Router for handling authentication related operations
 app.use("/api/v1/user/auth", authRouter)
 
 // Profile router
 app.use("/api/v1/user/profile", profileRouter)
-
 
 // Mongoose db connect
 mongoose

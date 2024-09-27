@@ -22,13 +22,6 @@ const userSchema = new mongoose.Schema({
     enum: ["student", "admin"],
     required: true,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-})
-
-const userInfoSchema = mongoose.Schema({
   profilePic: {
     type: String,
     default: null,
@@ -39,8 +32,12 @@ const userInfoSchema = mongoose.Schema({
     maxlength: 500,
     default: "",
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 })
-const UserInfo = mongoose.model("UserInfo", userInfoSchema)
+
 const User = mongoose.model("User", userSchema)
 
-export { User, UserInfo }
+export { User }

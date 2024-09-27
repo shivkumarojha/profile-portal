@@ -1,5 +1,5 @@
 import express from "express"
-import { User, UserInfo } from "../models/userModel.js"
+import { User } from "../models/userModel.js"
 import { z } from "zod"
 const router = express.Router()
 import bcrypt from "bcrypt"
@@ -15,11 +15,15 @@ const userSchema = z.object({
 })
 
 // me route to check if the user is authorized
-router.post("/me", authMiddleware, (req, res) => {
+router.post("/me", authMiddleware, async (req, res) => {
   if (req.userId) {
+    const user = await User.findOne({
+      email: req.userId,
+    })
     return res.status(200).json({
       message: "Authorized",
       verified: true,
+      user: user,
     })
   }
   return res.status(401).json({
