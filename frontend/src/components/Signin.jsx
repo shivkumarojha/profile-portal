@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import axios from "axios"
 import { BACKEND_URL } from "../../config"
 import { useNavigate } from "react-router-dom"
+import { ToastContainer, toast } from "react-toastify"
 
 export default function Signin() {
   const [email, setEmail] = useState("")
@@ -18,6 +19,7 @@ export default function Signin() {
       .then((response) => {
         if (response.data.token) {
           localStorage.setItem("token", response.data.token)
+          toast.success(response.data.message)
           navigate("/")
         }
       })
@@ -86,6 +88,7 @@ export default function Signin() {
           </a>
         </div>
       </div>
+      <ToastContainer />
     </div>
   )
 }

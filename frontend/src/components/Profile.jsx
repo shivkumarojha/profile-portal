@@ -4,33 +4,39 @@ import { BACKEND_URL } from "../../config"
 import axios from "axios"
 export default function ProfilePage() {
   const navigate = useNavigate()
-  const [token, setToken] = useState("")
+  const [fullName, setFullName] = useState("")
+  const [email, setEmail] = useState("")
+  const [bio, setBio] = useState("")
+  const [profilePic, setProfilePic] = useState("")
+
   useEffect(() => {
-    setToken(localStorage.getItem(token))
     axios
       .post(`${BACKEND_URL}/auth/me`, null, {
         headers: {
-          Authorization: "Bearer " + localStorage.getItem(token),
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
       .then((response) => {
         if (response.data.verified === true) {
+          setFullName(response.data.user.fullName)
+          setEmail(response.data.user.email)
+          setBio(response.data.user.bio)
+          setProfilePic(
+            `http://localhost:3000/${response.data.user.profilePic}`
+          )
           navigate("/")
         } else {
           navigate("/signin")
         }
       })
+      .catch((error) => {
+        console.log(error)
+        navigate("/signin")
+      })
   }, [])
-  // This would typically come from your app's state management (e.g., Redux)
-  const user = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    bio: "I am a software developer with a passion for React and web technologies.",
-    profilePicture: "/placeholder.svg?height=128&width=128",
-  }
 
   const handleEditClick = () => {
-    navigate("/profile/edit")
+    navigate("/edit-profile")
   }
 
   return (
@@ -47,24 +53,24 @@ export default function ProfilePage() {
         </div>
         <div className="flex flex-col items-center mb-6">
           <img
-            src={user.profilePicture}
+            src={profilePic}
             alt="Profile"
             className="w-32 h-32 rounded-full object-cover mb-4"
           />
-          <h3 className="text-xl font-semibold">{user.name}</h3>
+          <h3 className="text-xl font-semibold">{fullName}</h3>
         </div>
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Email
             </label>
-            <p className="mt-1 text-sm text-gray-900">{user.email}</p>
+            <p className="mt-1 text-sm text-gray-900">{email}</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Bio
             </label>
-            <p className="mt-1 text-sm text-gray-900">{user.bio}</p>
+            <p className="mt-1 text-sm text-gray-900">{bio}</p>
           </div>
         </div>
       </div>

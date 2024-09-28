@@ -1,15 +1,45 @@
-import React, { useState, useRef } from "react"
-
+import React, { useState, useRef, useEffect } from "react"
+import axios from "axios"
+import { BACKEND_URL } from "../../config"
+import { useNavigate } from "react-router-dom"
 export default function EditProfile() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [bio, setBio] = useState("")
+  const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
   const fileInputRef = useRef(null)
+  const navigate = useNavigate()
+  useEffect(() => {
+    // Check if the user is logged in and then populate the field
+    axios
+      .post(`${BACKEND_URL}/auth/me`, null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        if (response.data.verified === true) {
+          setName(response.data.user.fullName)
+          setEmail(response.data.user.email)
+          setBio(response.data.user.bio)
+          setImagePreview(
+            `http://localhost:3000/${response.data.user.profilePic}`
+          )
+        } else {
+          navigate("/signin")
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        navigate("/signin")
+      })
+  }, [navigate])
 
   const handleImageChange = (event) => {
     const file = event.target.files[0]
     if (file) {
+      setImageFile(file)
       const reader = new FileReader()
       reader.onloadend = () => {
         setImagePreview(reader.result)
@@ -18,10 +48,33 @@ export default function EditProfile() {
     }
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    // Add profile update logic here
-    console.log("Profile update with:", { name, email, bio, imagePreview })
+
+    const formData = new FormData()
+    formData.append("fullName", name)
+    formData.append("email", email)
+    formData.append("bio", bio)
+    if (imageFile) {
+      formData.append("profile-pic", imageFile) // Append the image file
+    }
+
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/profile/edit-profile`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      console.log("Profile updated:", response.data)
+      navigate("/")
+    } catch (error) {
+      console.error("Error updating profile:", error)
+    }
   }
 
   return (

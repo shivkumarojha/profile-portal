@@ -4,6 +4,7 @@ import EditProfile from "./components/EditProfile.jsx"
 import Signin from "./components/Signin.jsx"
 import Signup from "./components/Signup.jsx"
 import ProfilePage from "./components/Profile.jsx"
+import { ToastContainer } from "react-toastify"
 function App() {
   return (
     <>
