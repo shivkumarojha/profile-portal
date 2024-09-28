@@ -47,7 +47,7 @@ router.post("/signin", async (req, res) => {
   //   Check for password match
   const match = await bcrypt.compare(password, user.password)
   if (!match) {
-    return res.status(411).json({
+    return res.status(404).json({
       message: "Password didn't matched",
     })
   }

@@ -3,6 +3,7 @@ import axios from "axios"
 import { BACKEND_URL } from "../../config"
 import { useNavigate } from "react-router-dom"
 import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 export default function Signin() {
   const [email, setEmail] = useState("")
@@ -22,9 +23,12 @@ export default function Signin() {
           toast.success(response.data.message)
           navigate("/")
         }
+        console.log("comming here")
+        toast.success(response.data.message)
       })
       .catch((error) => {
         console.log(error)
+        toast.error(error.response.data.message)
       })
   }
 
@@ -86,9 +90,9 @@ export default function Signin() {
           >
             Sign up
           </a>
+          <ToastContainer />
         </div>
       </div>
-      <ToastContainer />
     </div>
   )
 }

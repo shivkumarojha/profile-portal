@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react"
 import axios from "axios"
 import { BACKEND_URL } from "../../config"
 import { useNavigate } from "react-router-dom"
+import { ToastContainer, toast } from "react-toastify"
 export default function EditProfile() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -71,6 +72,7 @@ export default function EditProfile() {
         }
       )
       console.log("Profile updated:", response.data)
+      toast.success(response.data.message)
       navigate("/")
     } catch (error) {
       console.error("Error updating profile:", error)
@@ -172,8 +174,19 @@ export default function EditProfile() {
             >
               Save Changes
             </button>
+            <button
+              onClick={() => {
+                localStorage.clear("token")
+                navigate("/signin")
+              }}
+              type="submit"
+              className="w-full flex justify-center py-2 px-4 mt-3 21border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-800 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
+            >
+              Logout
+            </button>
           </div>
         </form>
+        <ToastContainer />
       </div>
     </div>
   )

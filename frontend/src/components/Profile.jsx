@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { BACKEND_URL } from "../../config"
 import axios from "axios"
+
 export default function ProfilePage() {
   const navigate = useNavigate()
   const [fullName, setFullName] = useState("")
@@ -33,7 +34,7 @@ export default function ProfilePage() {
         console.log(error)
         navigate("/signin")
       })
-  }, [])
+  }, [navigate])
 
   const handleEditClick = () => {
     navigate("/edit-profile")
@@ -71,6 +72,15 @@ export default function ProfilePage() {
               Bio
             </label>
             <p className="mt-1 text-sm text-gray-900">{bio}</p>
+            <button
+              onClick={() => {
+                localStorage.clear("token")
+                navigate("/signin")
+              }}
+              className="mt-3 px-4 py-2 bg-red-600 text-white rounded hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+            >
+              Logout
+            </button>
           </div>
         </div>
       </div>
