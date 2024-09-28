@@ -9,6 +9,7 @@ export default function ProfilePage() {
   const [email, setEmail] = useState("")
   const [bio, setBio] = useState("")
   const [profilePic, setProfilePic] = useState("")
+  const [userType, setUserType] = useState("")
 
   useEffect(() => {
     axios
@@ -22,6 +23,7 @@ export default function ProfilePage() {
           setFullName(response.data.user.fullName)
           setEmail(response.data.user.email)
           setBio(response.data.user.bio)
+          setUserType(response.data.user.userType)
           setProfilePic(
             `http://localhost:3000/${response.data.user.profilePic}`
           )
@@ -44,7 +46,9 @@ export default function ProfilePage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-2xl bg-white rounded-lg shadow-md p-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">My Profile</h2>
+          <h2 className="text-2xl font-bold">
+            {userType.charAt(0).toUpperCase() + userType.slice(1)} Profile
+          </h2>
           <button
             onClick={handleEditClick}
             className="px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
@@ -72,6 +76,14 @@ export default function ProfilePage() {
               Bio
             </label>
             <p className="mt-1 text-sm text-gray-900">{bio}</p>
+            {userType === "admin" && (
+              <button
+                onClick={() => navigate("/student-profiles")}
+                className="mt-3 px-4 py-2 mr-3 bg-black text-white rounded hover:bg-black-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+              >
+                Show Student Profile
+              </button>
+            )}
             <button
               onClick={() => {
                 localStorage.clear("token")

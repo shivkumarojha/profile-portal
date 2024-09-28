@@ -90,4 +90,25 @@ router.post("/edit-profile", authMiddleware, (req, res) => {
   })
 })
 
+router.get("/student-profiles", authMiddleware, async (req, res) => {
+  const admin = req.userId
+  console.log(admin)
+  const verifiedAdmin = await User.findOne({
+    email: admin,
+  })
+  console.log(verifiedAdmin)
+  if (verifiedAdmin.userType === "admin") {
+    const students = await User.find({
+      userType: "student",
+    })
+    console.log(students)
+    return res.status(200).json({
+      message: "Student records fetched successfully",
+      students: students,
+    })
+  }
+  return res.status(404).json({
+    message: "Not a verified admin, Some error occured...",
+  })
+})
 export default router

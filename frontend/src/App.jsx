@@ -6,6 +6,7 @@ import Signup from "./components/Signup.jsx"
 import ProfilePage from "./components/Profile.jsx"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import StudentProfiles from "./components/StudentProfiles.jsx"
 function App() {
   return (
     <>
@@ -15,6 +16,7 @@ function App() {
           <Route path="/signin" element={<Signin />} />
           <Route path="/" element={<ProfilePage />} />
           <Route path="/edit-profile" element={<EditProfile />} />
+          <Route path="/student-profiles" element={<StudentProfiles />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />
